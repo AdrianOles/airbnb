@@ -9,7 +9,7 @@ import getCurrentUser from './actions/getCurrentUser'
 import RentModal from './components/modals/RentModal';
 
 export const metadata = {
-  title: 'Airbnb',
+  title: 'Airbnb Clone',
   description: 'Creating and Airbnb clone to learn nextjs and mongodb integration',
 }
 
