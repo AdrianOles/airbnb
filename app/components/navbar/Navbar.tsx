@@ -6,6 +6,8 @@ import Logo from "./Logo";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
 import Categories from "./Categories";
+import toast from 'react-hot-toast';
+import { useCallback, useEffect } from "react";
 
 interface NavbarProps {
     currentUser?: SafeUser | null;
@@ -14,6 +16,14 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({
     currentUser
 }) => {
+
+    useEffect(() => {
+        if (currentUser) {
+            console.log("ran")
+            toast.success("Logged in.")
+        }
+    }, [currentUser])
+
     return (
         <div className="fixed w-full bg-white z-10 shadow-sm">
             <div className="py-4 border-b-[1px]">
