@@ -1,19 +1,20 @@
-'use client'
+'use client';
+
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useCallback, useMemo } from "react";
+import { format } from 'date-fns';
 
 import useCountries from "@/app/hooks/useCountries";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-
 import {
     SafeListing,
     SafeReservation,
     SafeUser
 } from "@/app/types";
-import { useCallback, useMemo } from "react";
-import { format } from 'date-fns'
-import getCurrentUser from "@/app/actions/getCurrentUser";
+
 import HeartButton from "../HeartButton";
 import Button from "../Button";
+import ClientOnly from "../ClientOnly";
 
 interface ListingCardProps {
     data: SafeListing;
@@ -31,15 +32,15 @@ const ListingCard: React.FC<ListingCardProps> = ({
     onAction,
     disabled,
     actionLabel,
-    actionId = "",
-    currentUser
+    actionId = '',
+    currentUser,
 }) => {
     const router = useRouter();
     const { getByValue } = useCountries();
 
     const location = getByValue(data.locationValue);
-    
-    const handleCancel = useCallback(() => {
+
+    const handleCancel = useCallback(
         (e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
 
@@ -47,9 +48,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
                 return;
             }
 
-            onAction?.(actionId);
-        }
-    }, [onAction, actionId, disabled]);
+            onAction?.(actionId)
+        }, [disabled, onAction, actionId]);
 
     const price = useMemo(() => {
         if (reservation) {
@@ -59,7 +59,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
         return data.price;
     }, [reservation, data.price]);
 
-    const reservationData = useMemo(() => {
+    const reservationDate = useMemo(() => {
         if (!reservation) {
             return null;
         }
@@ -67,22 +67,41 @@ const ListingCard: React.FC<ListingCardProps> = ({
         const start = new Date(reservation.startDate);
         const end = new Date(reservation.endDate);
 
-        return `${format(start, 'PP')} - ${format(end, 'PP')}`
-    }, [reservation])
+        return `${format(start, 'PP')} - ${format(end, 'PP')}`;
+    }, [reservation]);
 
-    return ( 
-        <div className="col-span-1 cursor-pointer group"
-        onClick={() => router.push(`listing/${data.id}`)}>
+    return (
+        <div
+            onClick={() => router.push(`/listings/${data.id}`)}
+            className="col-span-1 cursor-pointer group"
+        >
             <div className="flex flex-col gap-2 w-full">
-                <div className="aspect-square w-full relative overflow-hidden rounded-xl">
+                <div
+                    className="
+            aspect-square 
+            w-full 
+            relative 
+            overflow-hidden 
+            rounded-xl
+          "
+                >
                     <Image
                         fill
-                        alt="Listing"
+                        className="
+              object-cover 
+              h-full 
+              w-full 
+              group-hover:scale-110 
+              transition
+            "
                         src={data.imageSrc}
-                        className="object-cover h-full w-full group-hover:scale-110 
-                        transition"
+                        alt="Listing"
                     />
-                    <div className="absolute top-3 right-3">
+                    <div className="
+            absolute
+            top-3
+            right-3
+          ">
                         <HeartButton
                             listingId={data.id}
                             currentUser={currentUser}
@@ -93,9 +112,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
                     {location?.region}, {location?.label}
                 </div>
                 <div className="font-light text-neutral-500">
-                    {reservationData || data.category}
+                    {reservationDate || data.category}
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex flex-row items-center gap-1">
                     <div className="font-semibold">
                         $ {price}
                     </div>
@@ -113,7 +132,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
                 )}
             </div>
         </div>
-     );
+    );
 }
- 
+
 export default ListingCard;
