@@ -38,6 +38,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
     const router = useRouter();
     const { getByValue } = useCountries();
 
+    //@ts-ignore
     const location = getByValue(data.locationValue);
 
     const handleCancel = useCallback(
